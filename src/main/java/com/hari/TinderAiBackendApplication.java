@@ -5,7 +5,11 @@ import com.hari.conversations.Conversation;
 import com.hari.conversations.ConversationRepository;
 import com.hari.profiles.Gender;
 import com.hari.profiles.Profile;
+import com.hari.profiles.ProfileCreationService;
 import com.hari.profiles.ProfileRepository;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,10 +22,7 @@ import java.util.List;
 public class TinderAiBackendApplication implements CommandLineRunner {
 
 	@Autowired
-	private ProfileRepository profileRepository;
-
-	@Autowired
-	private ConversationRepository conversationRepository;
+	private ProfileCreationService profileCreationService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TinderAiBackendApplication.class, args);
@@ -30,50 +31,8 @@ public class TinderAiBackendApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		profileRepository.deleteAll();
-		conversationRepository.deleteAll();
-		Profile profile=new Profile(
-				"1",
-				"Hariprasad ",
-				"Mungase",
-				21,
-				"Indian",
-				Gender.MALE,
-				"Full stacke Java dev",
-				"food.jpg",
-				"INIP"
+		profileCreationService.saveProfilesToDB();
 
-
-		);
-		profileRepository.save(profile);
-
-		Profile profile2=new Profile(
-				"2",
-				"Narayan ",
-				"Mungase",
-				21,
-				"Indian",
-				Gender.MALE,
-				"Full stacke Java dev",
-				"food.jpg",
-				"INIP"
-
-
-		);
-		profileRepository.save(profile2);
-		profileRepository.findAll().forEach(System.out::println);
-
-
-		Conversation conversation=new Conversation(
-				"1",
-				profile.id(),
-				List.of(
-						new ChatMessage("Hi",profile.id(), LocalDateTime.now())
-				)
-		);
-
-		conversationRepository.save(conversation);
-		conversationRepository.findAll().forEach(System.out::println);
 	}
 
 }
